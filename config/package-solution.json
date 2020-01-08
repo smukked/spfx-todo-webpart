@@ -1,0 +1,24 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "todo-webpart-client-side-solution",
+    "id": "ddfa923e-3b23-4e4f-b232-88a2134ba183",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "isDomainIsolated": false,
+    "features": [{
+      "title": "todo-webpart-client-side-solution",
+      "description": "todo-webpart-client-side-solution",
+      "id": "730f798f-cea0-4313-af70-477e5f281db8",
+      "version": "1.0.0.0",
+      "assets": {        
+        "elementManifests": [
+          "elements.xml"
+        ]
+      }
+    }]
+  },
+  "paths": {
+    "zippedPackage": "solution/todo-webpart.sppkg"
+  }
+}
