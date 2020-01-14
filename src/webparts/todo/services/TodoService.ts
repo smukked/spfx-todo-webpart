@@ -30,8 +30,10 @@ class _TodoService {
         requestHeaders.append('IF-MATCH', '*');
         requestHeaders.append('X-HTTP-Method', 'MERGE');
 
+        task.PercentComplete = (task.PercentComplete && task.PercentComplete === 1) ? 0 : 1;
+
         const body: string = JSON.stringify({
-            PercentComplete: (task.PercentComplete && task.PercentComplete === 1) ? 0 : 1
+            PercentComplete: task.PercentComplete
         });
 
         const httpClientOptions: ISPHttpClientOptions = {
