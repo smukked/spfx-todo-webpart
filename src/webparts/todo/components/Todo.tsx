@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { escape } from '@microsoft/sp-lodash-subset';
+import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
+import { Spinner } from 'office-ui-fabric-react/lib/Spinner';
+import { IPersonaSharedProps, Persona } from 'office-ui-fabric-react/lib/Persona';
+import { HoverCard, HoverCardType, IExpandingCardProps } from 'office-ui-fabric-react/lib/HoverCard';
 
 import TodoService from '../services/TodoService';
 import styles from './Todo.module.scss';
@@ -8,6 +12,8 @@ import { ITask } from '../interfaces/ITask';
 
 interface ITodoState {
   tasks: ITask[];
+  loading: boolean;
+  loadingTaskId: number;
 }
 
 export default class Todo extends React.Component<ITodoProps, ITodoState> {
@@ -16,20 +22,21 @@ export default class Todo extends React.Component<ITodoProps, ITodoState> {
     super(props);
 
     this.state = {
-      tasks: []
+      tasks: [],
+      loading: true,
+      loadingTaskId: 0
     };
-
   }
 
   public async componentDidMount() {
     const tasks = await TodoService.getTodos('Todo List');
-    this.setState({ tasks: tasks });
+    this.setState({ tasks: tasks, loading: false });
   }
 
   public render(): React.ReactElement<ITodoProps> {
 
     const toggleTask = async (task: ITask, e: React.MouseEvent) => {
-      e.persist();
+      this.setState({ loadingTaskId: task.Id });
 
       const updatedTask = await TodoService.updateTodo('Todo List', task);
       if (updatedTask) {
@@ -39,26 +46,46 @@ export default class Todo extends React.Component<ITodoProps, ITodoState> {
           }
           return t;
         });
-        
-        this.setState({ tasks: newTasks });
+
+        this.setState({ tasks: newTasks, loadingTaskId: 0 });
       }
+    };
+
+    const onRenderHoverCard = (persona: IPersonaSharedProps): JSX.Element => {
+      return <div className={styles.hoverCard}>
+        <div className={styles.assignedTo}>Assigned to:</div>
+        <Persona
+          {...persona}
+          onRenderSecondaryText={(prop) => {
+            return <a href={`mailto:${prop.secondaryText}`}>{prop.secondaryText}</a>;
+          }}
+        />
+      </div>;
     };
 
     return (
       <div className={styles.todo}>
-        <div className={styles.container}>
-          <div className={styles.row}>
-            <div className={styles.column}>
-              <span className={styles.title}>Todos</span>
-              <p className={styles.description}>{escape(this.props.description)}</p>
-              <ul>
-                {this.state.tasks.map((task, i) => {
-                  return <li className={task.PercentComplete === 1 ? styles.complete : ''} key={i}>{task.Title} - {task.AssignedTo.EMail}<button onClick={toggleTask.bind(this, task)}>x</button></li>;
-                })}
-              </ul>
-            </div>
-          </div>
-        </div>
+        <span className={styles.title}>{escape(this.props.description)}</span>
+        {this.state.loading && <Spinner label="Loading tasks..." />}
+        <ul className={styles.todoList}>
+          {!this.state.loading && this.state.tasks.map((task, i) => {
+            return <li key={i} className={styles.listItem}>
+              <HoverCard
+                cardDismissDelay={300}
+                type={HoverCardType.plain}
+                plainCardProps={{
+                  onRenderPlainCard: onRenderHoverCard,
+                  renderData: task.Persona
+                }}>
+                <h3 className={task.PercentComplete === 1 ? styles.complete : ''}>{task.Title}</h3>
+              </HoverCard>
+              <div className={styles.status}>
+                {this.state.loadingTaskId === task.Id && <Spinner style={{ float: 'left' }} label="Updating..." labelPosition="right" />}
+                {this.state.loadingTaskId !== task.Id && <Checkbox label={task.PercentComplete === 1 ? 'Open' : 'Complete'} checked={task.PercentComplete === 1} onChange={toggleTask.bind(this, task)} />}
+              </div>
+            </li>;
+          })}
+        </ul>
       </div>
     );
   }
