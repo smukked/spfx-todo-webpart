@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-    <!-- Task List  (TemplateType 100 - FeatureID 00bfea71-a83e-497e-9ba0-7a5c597d0107) -->
+    <!-- Task List  (TemplateType 107 - FeatureID 00bfea71-a83e-497e-9ba0-7a5c597d0107) -->
     <ListInstance 
-            FeatureId="00bfea71-a83e-497e-9ba0-7a5c597d0107"
-            Title="Todo List" 
-            Description=""
-            TemplateType="107"
-            Url="Lists/Todo"
-            Hidden="FALSE">            
+        FeatureId="00bfea71-a83e-497e-9ba0-7a5c597d0107"
+        Title="Todo List" 
+        Description=""
+        TemplateType="107"
+        Url="Lists/Todo"
+        Hidden="FALSE">            
     </ListInstance>
 </Elements>
