@@ -11,7 +11,7 @@ class _TodoService {
         const select = 'Id,Title,PercentComplete,AssignedTo/EMail,AssignedTo/FirstName,AssignedTo/LastName';
         const expand = 'AssignedTo';
         // const query = `${TodoWebPart.context.pageContext.web.absoluteUrl}/_api/web/lists/GetByTitle('${listName}')/items?$select=${select}&$expand=${expand}`;
-        const query = `${TodoWebPart.context.pageContext.web.absoluteUrl}/_api/web/GetList('${listName}')/items?$select=${select}&$expand=${expand}`;
+        const query = `${TodoWebPart.context.pageContext.web.absoluteUrl}/_api/web/GetList('${TodoWebPart.context.pageContext.site.serverRelativeUrl}${listName}')/items?$select=${select}&$expand=${expand}`;
         const response = await TodoWebPart.context.spHttpClient.get(query, SPHttpClient.configurations.v1);
 
         if (response.ok) {
@@ -26,7 +26,7 @@ class _TodoService {
 
     public async updateTodo(listName: string, task: ITask): Promise<ITask> {
 
-        const query = `${TodoWebPart.context.pageContext.web.absoluteUrl}/_api/web/GetList('${listName}')/items(${task.Id})`;
+        const query = `${TodoWebPart.context.pageContext.web.absoluteUrl}/_api/web/GetList('${TodoWebPart.context.pageContext.site.serverRelativeUrl}${listName}')/items(${task.Id})`;
 
         const requestHeaders: Headers = new Headers();
         requestHeaders.append('Accept', 'application/json;odata=nometadata');

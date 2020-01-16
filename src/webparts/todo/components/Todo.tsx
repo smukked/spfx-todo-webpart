@@ -29,7 +29,7 @@ export default class Todo extends React.Component<ITodoProps, ITodoState> {
   }
 
   public async componentDidMount() {
-    const tasks = await TodoService.getTodos('/sites/DannyModern/Lists/Todo');
+    const tasks = await TodoService.getTodos('/Lists/Todo');
     this.setState({ tasks: tasks, loading: false });
   }
 
@@ -38,7 +38,7 @@ export default class Todo extends React.Component<ITodoProps, ITodoState> {
     const toggleTask = async (task: ITask, e: React.MouseEvent) => {
       this.setState({ loadingTaskId: task.Id });
 
-      const updatedTask = await TodoService.updateTodo('/sites/DannyModern/Lists/Todo', task);
+      const updatedTask = await TodoService.updateTodo('/Lists/Todo', task);
       if (updatedTask) {
         const newTasks = this.state.tasks.map((t) => {
           if (t.Id === updatedTask.Id) {
